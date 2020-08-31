@@ -8,18 +8,18 @@ namespace SodukoSolver
     {
         #region Sudokus
         //easy
-        private int[,] _grid = new int[,]
-        {
-        {0,2,0,0,0,0,0,0,0},
-        {1,5,8,0,0,0,0,3,0},
-        {3,4,0,1,6,0,9,0,2},
-        {0,0,9,2,0,8,1,7,5},
-        {0,0,0,0,4,0,0,0,0},
-        {0,3,5,6,0,1,0,0,0},
-        {0,0,0,3,0,0,5,9,4},
-        {5,1,3,4,8,0,0,0,7},
-        {6,9,0,7,5,2,0,0,3}
-        };
+        //private int[,] _grid = new int[,]
+        //{
+        //{0,2,0,0,0,0,0,0,0},
+        //{1,5,8,0,0,0,0,3,0},
+        //{3,4,0,1,6,0,9,0,2},
+        //{0,0,9,2,0,8,1,7,5},
+        //{0,0,0,0,4,0,0,0,0},
+        //{0,3,5,6,0,1,0,0,0},
+        //{0,0,0,3,0,0,5,9,4},
+        //{5,1,3,4,8,0,0,0,7},
+        //{6,9,0,7,5,2,0,0,3}
+        //};
 
         //hard
         //private int[,] _grid = new int[,]
@@ -36,15 +36,18 @@ namespace SodukoSolver
         //};
 
         //expert
-        //{6,0,0,1,7,0,0,0,5},
-        //{0,0,0,0,4,0,0,2,0},
-        //{0,0,0,0,0,0,8,9,0},
-        //{0,3,7,8,0,0,0,0,2},
-        //{5,0,0,0,0,1,0,0,9},
-        //{0,0,2,0,0,0,0,0,0},
-        //{0,0,5,0,2,4,0,0,0},
-        //{0,0,0,0,1,0,6,0,0},
-        //{7,0,0,3,0,0,0,0,0} 
+        private int[,] _grid = new int[,]
+        {
+        {6,0,0,1,7,0,0,0,5},
+        {0,0,0,0,4,0,0,2,0},
+        {0,0,0,0,0,0,8,9,0},
+        {0,3,7,8,0,0,0,0,2},
+        {5,0,0,0,0,1,0,0,9},
+        {0,0,2,0,0,0,0,0,0},
+        {0,0,5,0,2,4,0,0,0},
+        {0,0,0,0,1,0,6,0,0},
+        {7,0,0,3,0,0,0,0,0}
+        };
         #endregion
 
         private bool _isReady = false;
@@ -84,34 +87,68 @@ namespace SodukoSolver
             bool square8 = false;
             bool square9 = false;
 
+            bool row1 = false;
+            bool row2 = false;
+            bool row3 = false;
+            bool row4 = false;
+            bool row5 = false;
+            bool row6 = false;
+            bool row7 = false;
+            bool row8 = false;
+            bool row9 = false;
+
+            bool column1 = false;
+            bool column2 = false;
+            bool column3 = false;
+            bool column4 = false;
+            bool column5 = false;
+            bool column6 = false;
+            bool column7 = false;
+            bool column8 = false;
+            bool column9 = false;
+
+
             while (!square1 || !square2 || !square3 || !square4 || !square5 || !square6 || !square7 || !square8 || !square9)
             {
-                //for (int i = 0; i < 100; i++)
-                //{
-                //    if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
-                //    if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
-                //    if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
+                for (int i = 0; i < 10; i++)
+                {
+                    if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
+                    if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
+                    if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
 
-                //    if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
-                //    if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
-                //    if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
+                    if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
+                    if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
+                    if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
 
-                //    if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
-                //    if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
-                //    if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
+                    if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
+                    if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
+                    if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
 
-                //    for (int ii = 0; ii < 10; ii++)
-                //    {
-                //        for (int j = 0; j < 9; j++)
-                //        {
-                //            SolveByRow(j);
-                //            SolveByColumn(j);
-                //        }
-                //    }
-                //}
-                //break;
+                    for (int ii = 0; ii < 10; ii++)
+                    {
+                        if (!row1) row1 = SolveByRow(0);
+                        if (!row2) row2 = SolveByRow(1);
+                        if (!row3) row3 = SolveByRow(2);
+                        if (!row4) row4 = SolveByRow(3);
+                        if (!row5) row5 = SolveByRow(4);
+                        if (!row6) row6 = SolveByRow(5);
+                        if (!row7) row7 = SolveByRow(6);
+                        if (!row8) row8 = SolveByRow(7);
+                        if (!row9) row9 = SolveByRow(8);
 
-                SolveByRow(8);
+                        if (!column1) column1 = SolveByColumn(0);
+                        if (!column2) column2 = SolveByColumn(1);
+                        if (!column3) column3 = SolveByColumn(2);
+                        if (!column4) column4 = SolveByColumn(3);
+                        if (!column5) column5 = SolveByColumn(4);
+                        if (!column6) column6 = SolveByColumn(5);
+                        if (!column7) column7 = SolveByColumn(6);
+                        if (!column8) column8 = SolveByColumn(7);
+                        if (!column9) column9 = SolveByColumn(8);
+                    }
+                }
+                break;
+
             }
         }
 
@@ -211,7 +248,6 @@ namespace SodukoSolver
                             {
                                 _grid[row, column] = i;
                                 Console.WriteLine("3x3 SOLVED " + row + " , " + iSet[1] + " - " + i);
-                                //Console.WriteLine(row + " , " + column + " , " + i + " - " + _grid[row, column]);
                             }
                         }
                     }
@@ -267,40 +303,41 @@ namespace SodukoSolver
             return toReturn;
         }
 
-        public bool SolveByRow(int row) //not finished
+        public bool SolveByRow(int row)
         {
             bool isDone = false;
-            List<int[]> allIndexes = new List<int[]>();
-            List<int[]> completedIndexes = new List<int[]>();
-            List<int[]> incompletedIndexes = new List<int[]>();
-            List<int> completedNumbers = new List<int>();
-
-            for (int i = 0; i < 9; i++)
-            {
-                allIndexes.Add(new[] {row, i});
-                if (_grid[row, i] != 0)
-                {
-                    completedIndexes.Add(new[] {row, i});
-                    completedNumbers.Add(_grid[row, i]);
-                }
-                else incompletedIndexes.Add(new[] {row, i});
-            }
-
-            if (completedIndexes.Count == 9)
-            {
-                isDone = true;
-                Console.WriteLine("row done");
-                return isDone;
-            }
 
             while (!isDone)
             {
-                for (int jj = 0; jj < 5; jj++) //it can max go though the process without coming any further 5 times
+                for (int ii = 0; ii < 5; ii++)
                 {
+                    List<int[]> allIndexes = new List<int[]>();
+                    List<int[]> completedIndexes = new List<int[]>();
+                    List<int[]> incompletedIndexes = new List<int[]>();
+                    List<int> completedNumbers = new List<int>();
+
+                    for (int i = 0; i < 9; i++)
+                    {
+                        allIndexes.Add(new[] {row, i});
+                        if (_grid[row, i] != 0)
+                        {
+                            completedIndexes.Add(new[] {row, i});
+                            completedNumbers.Add(_grid[row, i]);
+                        }
+                        else incompletedIndexes.Add(new[] {row, i});
+                    }
+
+                    if (completedIndexes.Count == 9)
+                    {
+                        isDone = true;
+                        Console.WriteLine("row " + row + " done");
+                        return isDone;
+                    }
+
                     for (int notSolvedNumber = 1; notSolvedNumber <= 9; notSolvedNumber++)
                     {
-                        if (completedNumbers.Contains(notSolvedNumber)) continue;
 
+                        if (completedNumbers.Contains(notSolvedNumber)) continue;
 
                         foreach (int[] iSet in incompletedIndexes)
                         {
@@ -343,10 +380,11 @@ namespace SodukoSolver
                             {
                                 _grid[row, iSet[1]] = notSolvedNumber;
                                 Console.WriteLine("ROW SOLVED " + row + " , " + iSet[1] + " - " + notSolvedNumber);
-                                return isDone;
                             }
                         }
                     }
+
+                    //return isDone;
                 }
 
                 return isDone;
@@ -354,6 +392,94 @@ namespace SodukoSolver
 
             return isDone;
         }
+
+        public bool SolveByColumn(int column)
+        {
+            bool isDone = false;
+
+            while (!isDone)
+            {
+                for (int ii = 0; ii < 5; ii++)
+                {
+                    List<int[]> allIndexes = new List<int[]>();
+                    List<int[]> completedIndexes = new List<int[]>();
+                    List<int[]> incompletedIndexes = new List<int[]>();
+                    List<int> completedNumbers = new List<int>();
+
+                    for (int i = 0; i < 9; i++)
+                    {
+                        allIndexes.Add(new[] { i, column });
+                        if (_grid[i, column] != 0)
+                        {
+                            completedIndexes.Add(new[] { i, column });
+                            completedNumbers.Add(_grid[i, column]);
+                        }
+                        else incompletedIndexes.Add(new[] { i, column });
+                    }
+
+                    if (completedIndexes.Count == 9)
+                    {
+                        isDone = true;
+                        Console.WriteLine("column " + column + " done");
+                        return isDone;
+                    }
+
+                    for (int notSolvedNumber = 1; notSolvedNumber <= 9; notSolvedNumber++)
+                    {
+
+                        if (completedNumbers.Contains(notSolvedNumber)) continue;
+
+                        foreach (int[] iSet in incompletedIndexes)
+                        {
+                            bool numberGoesHere = false;
+                            int numberGoesHere2 = 0;
+                            if (CheckRow(iSet[0], notSolvedNumber)) continue;
+                            else
+                            {
+                                int[] a = Get3By3FromIndex(iSet[0], iSet[1]);
+
+                                if (!GetNumbersCompletedIn3By3(a[0], a[1], a[2], a[3], a[4], a[5])
+                                    .Contains(notSolvedNumber))
+                                {
+                                    foreach (int[] iSet2 in incompletedIndexes)
+                                    {
+                                        if (iSet2 == iSet) continue;
+
+                                        a = Get3By3FromIndex(iSet2[0], iSet2[1]);
+                                        //List<int> hej = GetNumbersCompletedIn3By3(a[0], a[1], a[2], a[3], a[4], a[5]);
+                                        //bool test = hej.Contains(notSolvedNumber);
+                                        if (CheckRow(iSet2[0], notSolvedNumber) ||
+                                            GetNumbersCompletedIn3By3(a[0], a[1], a[2], a[3], a[4], a[5])
+                                                .Contains(notSolvedNumber))
+                                        {
+                                            numberGoesHere2++;
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            numberGoesHere = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            if (numberGoesHere2 == incompletedIndexes.Count - 1) numberGoesHere = true;
+                            if (numberGoesHere)
+                            {
+                                _grid[iSet[0], column] = notSolvedNumber;
+                                Console.WriteLine("COLUMN SOLVED " + column + " , " + iSet[0] + " - " + notSolvedNumber);
+                            }
+                        }
+                    }
+                    //return isDone;
+                }
+                return isDone;
+            }
+            return isDone;
+        }
+
 
 
         public void CollectInformation()
