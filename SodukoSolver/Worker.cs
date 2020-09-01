@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Xml.Schema;
 
 namespace SodukoSolver
 {
@@ -8,18 +10,18 @@ namespace SodukoSolver
     {
         #region Sudokus
         //easy
-        //private int[,] _grid = new int[,]
-        //{
-        //{0,2,0,0,0,0,0,0,0},
-        //{1,5,8,0,0,0,0,3,0},
-        //{3,4,0,1,6,0,9,0,2},
-        //{0,0,9,2,0,8,1,7,5},
-        //{0,0,0,0,4,0,0,0,0},
-        //{0,3,5,6,0,1,0,0,0},
-        //{0,0,0,3,0,0,5,9,4},
-        //{5,1,3,4,8,0,0,0,7},
-        //{6,9,0,7,5,2,0,0,3}
-        //};
+        private int[,] _grid = new int[,]
+        {
+        {0,2,0,0,0,0,0,0,0},
+        {1,5,8,0,0,0,0,3,0},
+        {3,4,0,1,6,0,9,0,2},
+        {0,0,9,2,0,8,1,7,5},
+        {0,0,0,0,4,0,0,0,0},
+        {0,3,5,6,0,1,0,0,0},
+        {0,0,0,3,0,0,5,9,4},
+        {5,1,3,4,8,0,0,0,7},
+        {6,9,0,7,5,2,0,0,3}
+        };
 
         //hard
         //private int[,] _grid = new int[,]
@@ -36,18 +38,18 @@ namespace SodukoSolver
         //};
 
         //expert
-        private int[,] _grid = new int[,]
-        {
-        {6,0,0,1,7,0,0,0,5},
-        {0,0,0,0,4,0,0,2,0},
-        {0,0,0,0,0,0,8,9,0},
-        {0,3,7,8,0,0,0,0,2},
-        {5,0,0,0,0,1,0,0,9},
-        {0,0,2,0,0,0,0,0,0},
-        {0,0,5,0,2,4,0,0,0},
-        {0,0,0,0,1,0,6,0,0},
-        {7,0,0,3,0,0,0,0,0}
-        };
+        //private int[,] _grid = new int[,]
+        //{
+        //{6,0,0,1,7,0,0,0,5},
+        //{0,0,0,0,4,0,0,2,0},
+        //{0,0,0,0,0,0,8,9,0},
+        //{0,3,7,8,0,0,0,0,2},
+        //{5,0,0,0,0,1,0,0,9},
+        //{0,0,2,0,0,0,0,0,0},
+        //{0,0,5,0,2,4,0,0,0},
+        //{0,0,0,0,1,0,6,0,0},
+        //{7,0,0,3,0,0,0,0,0}
+        //};
         #endregion
 
         private bool _isReady = false;
@@ -108,48 +110,49 @@ namespace SodukoSolver
             bool column9 = false;
 
 
-            while (!square1 || !square2 || !square3 || !square4 || !square5 || !square6 || !square7 || !square8 || !square9)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
-                    if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
-                    if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
+            //while (!square1 || !square2 || !square3 || !square4 || !square5 || !square6 || !square7 || !square8 || !square9)
+            //{
+            //    for (int i = 0; i < 10; i++)
+            //    {
+            //        if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
+            //        if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
+            //        if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
 
-                    if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
-                    if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
-                    if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
+            //        if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
+            //        if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
+            //        if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
 
-                    if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
-                    if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
-                    if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
+            //        if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
+            //        if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
+            //        if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
 
-                    for (int ii = 0; ii < 10; ii++)
-                    {
-                        if (!row1) row1 = SolveByRow(0);
-                        if (!row2) row2 = SolveByRow(1);
-                        if (!row3) row3 = SolveByRow(2);
-                        if (!row4) row4 = SolveByRow(3);
-                        if (!row5) row5 = SolveByRow(4);
-                        if (!row6) row6 = SolveByRow(5);
-                        if (!row7) row7 = SolveByRow(6);
-                        if (!row8) row8 = SolveByRow(7);
-                        if (!row9) row9 = SolveByRow(8);
+            //        for (int ii = 0; ii < 10; ii++)
+            //        {
+            //            if (!row1) row1 = SolveByRow(0);
+            //            if (!row2) row2 = SolveByRow(1);
+            //            if (!row3) row3 = SolveByRow(2);
+            //            if (!row4) row4 = SolveByRow(3);
+            //            if (!row5) row5 = SolveByRow(4);
+            //            if (!row6) row6 = SolveByRow(5);
+            //            if (!row7) row7 = SolveByRow(6);
+            //            if (!row8) row8 = SolveByRow(7);
+            //            if (!row9) row9 = SolveByRow(8);
 
-                        if (!column1) column1 = SolveByColumn(0);
-                        if (!column2) column2 = SolveByColumn(1);
-                        if (!column3) column3 = SolveByColumn(2);
-                        if (!column4) column4 = SolveByColumn(3);
-                        if (!column5) column5 = SolveByColumn(4);
-                        if (!column6) column6 = SolveByColumn(5);
-                        if (!column7) column7 = SolveByColumn(6);
-                        if (!column8) column8 = SolveByColumn(7);
-                        if (!column9) column9 = SolveByColumn(8);
-                    }
-                }
-                break;
+            //            if (!column1) column1 = SolveByColumn(0);
+            //            if (!column2) column2 = SolveByColumn(1);
+            //            if (!column3) column3 = SolveByColumn(2);
+            //            if (!column4) column4 = SolveByColumn(3);
+            //            if (!column5) column5 = SolveByColumn(4);
+            //            if (!column6) column6 = SolveByColumn(5);
+            //            if (!column7) column7 = SolveByColumn(6);
+            //            if (!column8) column8 = SolveByColumn(7);
+            //            if (!column9) column9 = SolveByColumn(8);
+            //        }
+            //    }
+            //    break;
 
-            }
+            //}
+            Solve3By3(3, 4, 5, 6, 7, 8);
         }
 
         List<int> GetNumbersCompletedIn3By3(int y1, int y2, int y3, int x1, int x2, int x3)
@@ -216,8 +219,14 @@ namespace SodukoSolver
                         int column = iSet[1];
                         for (int i = 1; i <= 9; i++)
                         {
+                            //location y1, y2....
+                            //list of incomplete indexes
+                            //index we are checking right now
+                            //number we are looking for
                             bool numberGoesHere = false;
                             int numberGoesHere2 = 0;
+                            int rowThatNeedsToBeChecked = -1;
+                            List<int[]> numberCanGoHere = new List<int[]>();
                             if (GetNumbersCompletedIn3By3(y1, y2, y3, x1, x2, x3).Contains(i)) continue; //checks if the number already exists in the 3x3 area
                             if (!CheckColumn(column, i) && !CheckRow(row, i)) //if the number is NOT present on the current row or column
                             {
@@ -226,9 +235,14 @@ namespace SodukoSolver
 
 
                                 //foreach (int[] incompleteFields in otherIncompleteIndexes)
+                                numberCanGoHere = new List<int[]>();
                                 foreach (int[] incompleteFields in notCompletedIndexes)
                                 {
-                                    if (incompleteFields == iSet) continue;
+                                    if (incompleteFields == iSet)
+                                    {
+                                        numberCanGoHere.Add(incompleteFields);
+                                        continue;
+                                    }
                                     if (CheckColumn(incompleteFields[1], i) || CheckRow(incompleteFields[0], i))
                                     {
                                         numberGoesHere2++;
@@ -236,10 +250,14 @@ namespace SodukoSolver
                                     }
                                     else
                                     {
+                                        numberCanGoHere.Add(incompleteFields);
                                         numberGoesHere = false;
-                                        break;
+                                        //break;
                                     }
                                 }
+
+                                //Console.WriteLine("number: " + i + ", can be " + numberCanGoHere.Count + " different places");
+                                //WAS HERE
 
                                 //if (numberGoesHere2 == otherIncompleteIndexes.Count) numberGoesHere = true;
                                 if (numberGoesHere2 == notCompletedIndexes.Count - 1) numberGoesHere = true;
@@ -248,7 +266,107 @@ namespace SodukoSolver
                             {
                                 _grid[row, column] = i;
                                 Console.WriteLine("3x3 SOLVED " + row + " , " + iSet[1] + " - " + i);
+                            }else if (numberCanGoHere.Count >= 2 && numberCanGoHere.Count <= 3)
+                            {
+                                bool needToCheckOther3By3 = false;
+                                int needToCheckOther3By32 = 0;
+                                rowThatNeedsToBeChecked = -1;
+                                //checks if the aviable spots are on the same row
+                                Console.WriteLine("number: " + i + ", can be " + numberCanGoHere.Count + " different places");
+                                for (int j = 0; j < 9; j++)
+                                {
+                                    foreach (int[] ints in numberCanGoHere)
+                                    {
+                                        if (ints[0] == j)
+                                        {
+                                            needToCheckOther3By32++;
+                                            needToCheckOther3By3 = true;
+                                        }
+                                        else needToCheckOther3By3 = false;
+                                    }
+
+                                    if (needToCheckOther3By3 && needToCheckOther3By32 == numberCanGoHere.Count)
+                                    {
+                                        rowThatNeedsToBeChecked = j;
+                                        break;
+                                    }
+
+                                    needToCheckOther3By32 = 0;
+                                }
                             }
+                            if (rowThatNeedsToBeChecked != -1)
+                            {
+                                Console.WriteLine("row: " + rowThatNeedsToBeChecked + " contains: " + i);
+                                //now we need to check the other 2x 3by3's with this knowledge
+                                List<int[]> theOther23By3 = new List<int[]>();
+                                int[] square1 = Get3By3FromIndex(rowThatNeedsToBeChecked, 0);
+                                int[] square2 = Get3By3FromIndex(rowThatNeedsToBeChecked, 3);
+                                int[] square3 = Get3By3FromIndex(rowThatNeedsToBeChecked, 6);
+                                int[] squareNotToCheck = Get3By3FromIndex(iSet[0], iSet[1]);
+                                if (!Enumerable.SequenceEqual(square1, squareNotToCheck)) theOther23By3.Add(square1);
+                                if (!Enumerable.SequenceEqual(square2, squareNotToCheck)) theOther23By3.Add(square2);
+                                if (!Enumerable.SequenceEqual(square3, squareNotToCheck)) theOther23By3.Add(square3);
+                                Console.WriteLine(theOther23By3.Count);
+                                foreach (int[] ints in theOther23By3)
+                                {
+                                    if (!GetNumbersCompletedIn3By3(ints[0], ints[1], ints[2], ints[3], ints[4], ints[5]).Contains(i))
+                                    {
+                                        //if the 3by3 field dosent contain the number, we find witch rows that contains the number,
+                                        //here it also takes the information about the previous aquired data
+                                        bool row1AlreadyGotNumber = false;
+                                        bool row2AlreadyGotNumber = false;
+                                        bool row3AlreadyGotNumber = false;
+                                        if (ints[0] == rowThatNeedsToBeChecked || CheckRow(ints[0], i)) row1AlreadyGotNumber = true;
+                                        if (ints[1] == rowThatNeedsToBeChecked || CheckRow(ints[1], i)) row2AlreadyGotNumber = true;
+                                        if (ints[2] == rowThatNeedsToBeChecked || CheckRow(ints[2], i)) row3AlreadyGotNumber = true;
+
+                                        Console.WriteLine("box: " + ints[0] + ints[1] + ints[2] + ints[3] + ints[4] + ints[5]);
+                                        Console.WriteLine("row1="+row1AlreadyGotNumber + " , " + "row2=" + row2AlreadyGotNumber + " , " + "row3=" + row3AlreadyGotNumber);
+
+                                        //now we got the 3x3 square, and we got the rows that already got a number on it
+                                        List<int[]> indexesThatNeedsToBeCheked = new List<int[]>();
+                                        List<int[]> indexesThatNeedsToBeCheked2 = new List<int[]>();
+                                        if (!row1AlreadyGotNumber)
+                                        {
+                                            indexesThatNeedsToBeCheked.Add(new []{ints[0], ints[3]});
+                                            indexesThatNeedsToBeCheked.Add(new []{ints[0], ints[4]});
+                                            indexesThatNeedsToBeCheked.Add(new []{ints[0], ints[5]});
+                                        }
+                                        if (!row2AlreadyGotNumber)
+                                        {
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[3] });
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[4] });
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[5] });
+                                        }
+                                        if (!row3AlreadyGotNumber)
+                                        {
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[3] });
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[4] });
+                                            indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[5] });
+                                        }
+
+                                        
+
+                                        //removes all the fields where there are allready numbers
+                                        foreach (int[] intse in indexesThatNeedsToBeCheked)
+                                        {
+                                            if (_grid[intse[0], intse[1]] == 0) indexesThatNeedsToBeCheked2.Add(intse);
+                                        }
+
+                                        //now we only have the avibale spots that are free, and we just need to run a checkcolumn
+                                        foreach (int[] intse in indexesThatNeedsToBeCheked2)
+                                        {
+                                            //Console.WriteLine("suitable spot: " + intse[0] + " , " + intse[1]);
+                                            //if (!CheckColumn(intse[1], i))
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("The other 3by3 already had a: " + i);
+                                    }
+                                }
+                            }
+                            //bottom of this number in the first unsolved field
                         }
                     }
                 }
@@ -257,6 +375,165 @@ namespace SodukoSolver
             }
 
             return isDone;
+
+        }
+
+        //WORKING ON THIS
+        public void SolveAndSetNumberIn3x3(int y1, int y2, int y3, int x1, int x2, int x3, List<int[]> notCompletedIndexes, int[] iSet, int i)
+        {
+            //location y1, y2....
+            //list of incomplete indexes
+            //index we are checking right now
+            //number we are looking for
+            int row = iSet[0];
+            int column = iSet[1];
+            bool numberGoesHere = false;
+            int numberGoesHere2 = 0;
+            int rowThatNeedsToBeChecked = -1;
+            List<int[]> numberCanGoHere = new List<int[]>();
+            if (!GetNumbersCompletedIn3By3(y1, y2, y3, x1, x2, x3).Contains(i)) //checks if the number already exists in the 3x3 area
+            {
+                if (!CheckColumn(column, i) && !CheckRow(row, i)) //if the number is NOT present on the current row or column
+                {
+                    //List<int[]> otherIncompleteIndexes = notCompletedIndexes;
+                    //otherIncompleteIndexes.Remove(iSet);
+
+
+                    //foreach (int[] incompleteFields in otherIncompleteIndexes)
+                    numberCanGoHere = new List<int[]>();
+                    foreach (int[] incompleteFields in notCompletedIndexes)
+                    {
+                        if (incompleteFields == iSet)
+                        {
+                            numberCanGoHere.Add(incompleteFields);
+                            continue;
+                        }
+                        if (CheckColumn(incompleteFields[1], i) || CheckRow(incompleteFields[0], i))
+                        {
+                            numberGoesHere2++;
+                            continue;
+                        }
+                        else
+                        {
+                            numberCanGoHere.Add(incompleteFields);
+                            numberGoesHere = false;
+                            //break;
+                        }
+                    }
+
+                    //Console.WriteLine("number: " + i + ", can be " + numberCanGoHere.Count + " different places");
+                    //WAS HERE
+
+                    //if (numberGoesHere2 == otherIncompleteIndexes.Count) numberGoesHere = true;
+                    if (numberGoesHere2 == notCompletedIndexes.Count - 1) numberGoesHere = true;
+                }
+                if (numberGoesHere)
+                {
+                    _grid[row, column] = i;
+                    Console.WriteLine("3x3 SOLVED " + row + " , " + iSet[1] + " - " + i);
+                }
+                else if (numberCanGoHere.Count >= 2 && numberCanGoHere.Count <= 3)
+                {
+                    bool needToCheckOther3By3 = false;
+                    int needToCheckOther3By32 = 0;
+                    rowThatNeedsToBeChecked = -1;
+                    //checks if the aviable spots are on the same row
+                    Console.WriteLine("number: " + i + ", can be " + numberCanGoHere.Count + " different places");
+                    for (int j = 0; j < 9; j++)
+                    {
+                        foreach (int[] ints in numberCanGoHere)
+                        {
+                            if (ints[0] == j)
+                            {
+                                needToCheckOther3By32++;
+                                needToCheckOther3By3 = true;
+                            }
+                            else needToCheckOther3By3 = false;
+                        }
+
+                        if (needToCheckOther3By3 && needToCheckOther3By32 == numberCanGoHere.Count)
+                        {
+                            rowThatNeedsToBeChecked = j;
+                            break;
+                        }
+
+                        needToCheckOther3By32 = 0;
+                    }
+                }
+                if (rowThatNeedsToBeChecked != -1)
+                {
+                    Console.WriteLine("row: " + rowThatNeedsToBeChecked + " contains: " + i);
+                    //now we need to check the other 2x 3by3's with this knowledge
+                    List<int[]> theOther23By3 = new List<int[]>();
+                    int[] square1 = Get3By3FromIndex(rowThatNeedsToBeChecked, 0);
+                    int[] square2 = Get3By3FromIndex(rowThatNeedsToBeChecked, 3);
+                    int[] square3 = Get3By3FromIndex(rowThatNeedsToBeChecked, 6);
+                    int[] squareNotToCheck = Get3By3FromIndex(iSet[0], iSet[1]);
+                    if (!Enumerable.SequenceEqual(square1, squareNotToCheck)) theOther23By3.Add(square1);
+                    if (!Enumerable.SequenceEqual(square2, squareNotToCheck)) theOther23By3.Add(square2);
+                    if (!Enumerable.SequenceEqual(square3, squareNotToCheck)) theOther23By3.Add(square3);
+                    Console.WriteLine(theOther23By3.Count);
+                    foreach (int[] ints in theOther23By3)
+                    {
+                        if (!GetNumbersCompletedIn3By3(ints[0], ints[1], ints[2], ints[3], ints[4], ints[5]).Contains(i))
+                        {
+                            //if the 3by3 field dosent contain the number, we find witch rows that contains the number,
+                            //here it also takes the information about the previous aquired data
+                            bool row1AlreadyGotNumber = false;
+                            bool row2AlreadyGotNumber = false;
+                            bool row3AlreadyGotNumber = false;
+                            if (ints[0] == rowThatNeedsToBeChecked || CheckRow(ints[0], i)) row1AlreadyGotNumber = true;
+                            if (ints[1] == rowThatNeedsToBeChecked || CheckRow(ints[1], i)) row2AlreadyGotNumber = true;
+                            if (ints[2] == rowThatNeedsToBeChecked || CheckRow(ints[2], i)) row3AlreadyGotNumber = true;
+
+                            Console.WriteLine("box: " + ints[0] + ints[1] + ints[2] + ints[3] + ints[4] + ints[5]);
+                            Console.WriteLine("row1=" + row1AlreadyGotNumber + " , " + "row2=" + row2AlreadyGotNumber + " , " + "row3=" + row3AlreadyGotNumber);
+
+                            //now we got the 3x3 square, and we got the rows that already got a number on it
+                            List<int[]> indexesThatNeedsToBeCheked = new List<int[]>();
+                            List<int[]> indexesThatNeedsToBeCheked2 = new List<int[]>();
+                            if (!row1AlreadyGotNumber)
+                            {
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[0], ints[3] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[0], ints[4] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[0], ints[5] });
+                            }
+                            if (!row2AlreadyGotNumber)
+                            {
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[3] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[4] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[5] });
+                            }
+                            if (!row3AlreadyGotNumber)
+                            {
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[3] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[4] });
+                                indexesThatNeedsToBeCheked.Add(new[] { ints[1], ints[5] });
+                            }
+
+
+
+                            //removes all the fields where there are allready numbers
+                            foreach (int[] intse in indexesThatNeedsToBeCheked)
+                            {
+                                if (_grid[intse[0], intse[1]] == 0) indexesThatNeedsToBeCheked2.Add(intse);
+                            }
+
+                            //now we only have the avibale spots that are free, and we just need to run a checkcolumn
+                            foreach (int[] intse in indexesThatNeedsToBeCheked2)
+                            {
+                                //Console.WriteLine("suitable spot: " + intse[0] + " , " + intse[1]);
+                                //if (!CheckColumn(intse[1], i))
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("The other 3by3 already had a: " + i);
+                        }
+                    }
+                }
+                //bottom of this number in the first unsolved field
+            }
 
         }
 
