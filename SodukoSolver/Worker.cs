@@ -23,33 +23,33 @@ namespace SodukoSolver
         //{6,9,0,7,5,2,0,0,3}
         //};
 
-        //medium
-        private int[,] _grid = new int[,]
-        {
-        {0,9,0,0,0,6,1,0,0},
-        {0,0,0,5,0,0,0,3,2},
-        {3,0,4,0,1,0,0,0,0},
-        {0,0,8,0,5,0,0,1,0},
-        {9,5,0,6,0,0,0,8,0},
-        {0,0,8,0,0,9,2,0,5},
-        {0,0,0,0,9,0,3,0,7},
-        {4,0,3,2,0,0,0,0,0},
-        {0,6,0,0,3,5,8,0,0}
-        };
-
-        ////hard
+        ////medium
         //private int[,] _grid = new int[,]
         //{
-        //    {0,0,0,0,6,2,3,4,0},
-        //    {0,0,6,0,3,0,0,0,1},
-        //    {0,4,9,0,1,0,0,2,0},
-        //    {0,0,0,0,0,0,1,0,0},
-        //    {0,0,2,0,0,8,0,7,9},
-        //    {7,0,0,0,0,0,0,0,0},
-        //    {0,2,7,0,0,0,0,0,0},
-        //    {6,0,3,1,0,0,0,0,0},
-        //    {0,0,0,0,0,4,6,8,0}
+        //    {0,0,7,0,0,3,0,0,2},
+        //    {0,9,4,0,0,0,0,6,0},
+        //    {0,0,0,7,2,0,0,1,0},
+        //    {4,0,0,0,0,1,0,0,9},
+        //    {0,0,0,0,4,0,8,0,1},
+        //    {9,5,0,0,3,0,0,0,0},
+        //    {0,4,0,0,8,0,0,2,6},
+        //    {7,0,0,9,0,2,1,0,0},
+        //    {6,0,2,0,0,0,5,0,3}
         //};
+
+        //hard
+        private int[,] _grid = new int[,]
+        {
+            {0,0,0,0,6,2,3,4,0},
+            {0,0,6,0,3,0,0,0,1},
+            {0,4,9,0,1,0,0,2,0},
+            {0,0,0,0,0,0,1,0,0},
+            {0,0,2,0,0,8,0,7,9},
+            {7,0,0,0,0,0,0,0,0},
+            {0,2,7,0,0,0,0,0,0},
+            {6,0,3,1,0,0,0,0,0},
+            {0,0,0,0,0,4,6,8,0}
+        };
 
         ////expert
         //private int[,] _grid = new int[,]
@@ -128,17 +128,17 @@ namespace SodukoSolver
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    //if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
-                    //if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
-                    //if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
+                    if (!square1) square1 = Solve3By3(0, 1, 2, 0, 1, 2); //Console.WriteLine("sq1 " + square1);
+                    if (!square2) square2 = Solve3By3(0, 1, 2, 3, 4, 5); //Console.WriteLine("sq2 " + square2);
+                    if (!square3) square3 = Solve3By3(0, 1, 2, 6, 7, 8); //Console.WriteLine("sq3 " + square3);
 
-                    //if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
-                    //if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
-                    //if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
+                    if (!square4) square4 = Solve3By3(3, 4, 5, 0, 1, 2); //Console.WriteLine("sq4 " + square4);
+                    if (!square5) square5 = Solve3By3(3, 4, 5, 3, 4, 5); //Console.WriteLine("sq5 " + square5);
+                    if (!square6) square6 = Solve3By3(3, 4, 5, 6, 7, 8); //Console.WriteLine("sq6 " + square6);
 
-                    //if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
-                    //if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
-                    //if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
+                    if (!square7) square7 = Solve3By3(6, 7, 8, 0, 1, 2); //Console.WriteLine("sq7 " + square7);
+                    if (!square8) square8 = Solve3By3(6, 7, 8, 3, 4, 5); //Console.WriteLine("sq8 " + square8);
+                    if (!square9) square9 = Solve3By3(6, 7, 8, 6, 7, 8); //Console.WriteLine("sq9 " + square9);
 
                     //for (int ii = 0; ii < 30; ii++)
                     //{
@@ -167,7 +167,7 @@ namespace SodukoSolver
             }
 
 
-            Solve3By3(3, 4, 5, 0, 1, 2);
+            //Solve3By3(3, 4, 5, 0, 1, 2);
         }
 
         List<int> GetNumbersCompletedIn3By3(int y1, int y2, int y3, int x1, int x2, int x3)
