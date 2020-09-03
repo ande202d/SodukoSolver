@@ -10,23 +10,12 @@ namespace SodukoSolver
     {
 
         private int[,] _grid;
+        private int[,] _backup;
 
-        private int[,] _solution_hard = new int[,]
-        {
-            {8,2,4,9,1,5,3,7,6},
-            {6,9,3,4,7,2,5,1,8},
-            {1,5,7,3,6,8,9,4,2},
-            {3,8,5,7,2,6,4,9,1},
-            {7,6,2,1,4,9,8,3,5},
-            {4,1,9,5,8,3,2,6,7},
-            {2,4,8,6,9,1,7,5,3},
-            {9,3,6,2,5,7,1,8,4},
-            {5,7,1,8,3,4,6,2,9}
-        };
 
         public enum Difficulty
         {
-            Clear, Easy, Medium, Hard, Expert
+            Clear, Easy, Medium, Hard, VeryHard, Expert
         }
 
         private Difficulty _difficulty;
@@ -44,7 +33,14 @@ namespace SodukoSolver
         private List<int[]> _sqare7Indexes = new List<int[]>();
         private List<int[]> _sqare8Indexes = new List<int[]>();
         private List<int[]> _sqare9Indexes = new List<int[]>();
+        private bool _isSolved;
 
+
+        public bool IsSolved
+        {
+            get { return _isSolved; }
+            set { _isSolved = value; }
+        }
         public WorkerV2(Difficulty difficulty)
         {
             _difficulty = difficulty;
@@ -57,25 +53,40 @@ namespace SodukoSolver
         {
             Print();
 
-            for (int j = 0; j < 100; j++)
-            {
-                for (int i = 0; i < 9; i++)
-                {
-                    if (SolveASqare(_allSqaresInOneList[i])) i = 0;
-                    if (SolveARow(i)) i = 0;
-                    if (SolveAColumn(i)) i = 0;
-                    //SolveASqare(_allSqaresInOneList[i]);
-                    //if (j < 3) SolveARow(i);
-                    //if (j < 3) SolveAColumn(i);
-                }
-                if (GetFreeSpotsInList(_allIndexes).Count == 0) break;
-            }
+            CollectInformation();
 
+            Solve();
+        }
 
+        public void Solve()
+        {
+            SolveWithMath();
+
+            Console.WriteLine("-------------------------------------------------------------------");
+            Console.WriteLine($"----------------------------AFTER PURE MATH.-----------------------");
+            Console.WriteLine("-------------------------------------------------------------------");
 
             Print();
+
+            Check();
+
+            TakeBackup();
+
+            for (int i = 1; i <= 9; i++)
+            {
+                if (!IsSolved) GuessOnNumber(i);
+                else break;
+                Check();
+            }
+
+            if (!IsSolved)
+            {
+                GuessOnNumberAdvanced();
+            }
+
+            Print();
+
             IsItCorrect();
-            CheckPlacedNumbers();
         }
 
         private bool SolveARow(int row)
@@ -130,7 +141,19 @@ namespace SodukoSolver
             return false;
         }
 
-
+        public void SolveWithMath()
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    if (SolveASqare(_allSqaresInOneList[i])) i = 0;
+                    if (SolveARow(i)) i = 0;
+                    if (SolveAColumn(i)) i = 0;
+                }
+                if (GetFreeSpotsInList(_allIndexes).Count == 0) break;
+            }
+        }
         /// <summary>
         /// Takes a list of locations and tries to place the number
         /// </summary>
@@ -155,7 +178,7 @@ namespace SodukoSolver
                     }
                     //Console.WriteLine("HAHAHAHAHAHA");
                     if (CanNumberBeHere(freeSpots[0], numbers[0])) SetData(freeSpots[0], numbers[0]);
-                    else Console.WriteLine("WE ARE FUCKED");
+                    //else Console.WriteLine("WE ARE FUCKED");
                     //Print();
                 }
                 else
@@ -225,7 +248,7 @@ namespace SodukoSolver
                         foreach (List<int[]> sqare in otherSqaresToCheck)
                         {
                             bool test = PlaceNumberInArea(sqare, number, spotsToIgnore);
-                            Console.WriteLine("ADVANCED");
+                            //Console.WriteLine("ADVANCED");
                             break;
                         }
 
@@ -235,6 +258,108 @@ namespace SodukoSolver
             }
 
             return toReturn;
+        }
+
+        private void GuessOnNumber(int number)
+        {
+            Console.WriteLine("-------------------------------------------------------------------");
+            Console.WriteLine($"----------------------------WILD-GUESSING-[{number}]----------------------");
+            Console.WriteLine("-------------------------------------------------------------------");
+
+            List<int[]> freeSpots = GetFreeSpotsInList(_allIndexes);
+            List<int[]> acceptedSpots = new List<int[]>();
+
+
+            foreach (int[] free in freeSpots)
+            {
+                if (CanNumberBeHere(free, number)) acceptedSpots.Add(free);
+            }
+            for (int i = 0; i < acceptedSpots.Count; i++)
+            {
+                int[] spot = acceptedSpots[i];
+                Console.WriteLine($"TRYING TO PLACE {number} ON: [{spot[0]} , {spot[1]}]");
+                SetData(spot, number);
+                SolveWithMath();
+                //Print();
+                if (GetTotal() != 405)
+                {
+                    _grid = (int[,])_backup.Clone();
+                    Console.WriteLine("FUCK GO BACK");
+                    //Print();
+                    continue;
+                }
+                else
+                {
+                    Console.WriteLine("IT WORKED, IT IS COMPLETE");
+                    break;
+                }
+            }
+            if (GetTotal() != 405)
+            {
+                _grid = (int[,])_backup.Clone();
+            }
+        }
+
+        private void GuessOnNumberAdvanced()
+        {
+            //veryhard= start from 7
+            for (int number = 1; number <= 9; number++)
+            {
+                Console.WriteLine("-------------------------------------------------------------------");
+                Console.WriteLine($"----------------------WILD-GUESSING-ADVANCED----------------------");
+                Console.WriteLine("-------------------------------------------------------------------");
+
+                List<int[]> freeSpots = GetFreeSpotsInList(_allIndexes);
+                List<int[]> acceptedSpots = new List<int[]>();
+
+
+                foreach (int[] free in freeSpots)
+                {
+                    if (CanNumberBeHere(free, number)) acceptedSpots.Add(free);
+                }
+
+                //Console.WriteLine($"THE NUMBER {number} CAN BE {acceptedSpots.Count} PLACES");
+                //continue;
+
+                for (int i = 0; i < acceptedSpots.Count; i++)
+                {
+                    int[] spot = acceptedSpots[i];
+                    Console.WriteLine($"TRYING TO PLACE {number} ON: [{spot[0]} , {spot[1]}] - [ADVANCED]");
+                    SetData(spot, number);
+                    List<int> numbers = new List<int>{1,2,3,4,5,6,7,8,9};
+                    numbers.Remove(number);
+                    for (int j = 0; j < numbers.Count; j++)
+                    {
+                        if (!IsSolved) GuessOnNumber(numbers[j]);
+                        else break;
+                        Check();
+                    }
+                    if (IsSolved) break;
+
+                    SolveWithMath();
+
+                    Check();
+                    //Print();
+                    if (!IsSolved)
+                    {
+                        _grid = (int[,])_backup.Clone();
+                        Console.WriteLine("FUCK GO BACK");
+                        //Print();
+                        continue;
+                    }
+                    else
+                    {
+                        Console.WriteLine("IT WORKED, IT IS COMPLETE");
+                        break;
+                    }
+                }
+                if (GetTotal() != 405)
+                {
+                    _grid = (int[,])_backup.Clone();
+                }
+                Check();
+                if (IsSolved) break;
+            }
         }
 
         private List<List<int[]>> FindAffectedSqares(List<int[]> area)
@@ -516,12 +641,6 @@ namespace SodukoSolver
         {
             if (_grid[location[0], location[1]] != 0) throw new Exception("Tried to place number on a filled spot");
 
-            //if (number != _solution_hard[location[0], location[1]])
-            //{
-            //    Print();
-            //    Console.WriteLine("THIS IS WRONG");
-            //}
-
             _grid[location[0], location[1]] = number;
 
             if (GetFreeSpotsInList(GetSqareFromIndex(location)).Count == 1)
@@ -538,11 +657,11 @@ namespace SodukoSolver
                 int[] fucked = GetFreeSpotsInList(GetSqareFromIndex(location))[0];
                 if (!CanNumberBeHere(fucked, numbers[0]))
                 {
-                    Print();
-                    Console.WriteLine($"WE ARE FUCKED AT [{fucked[0]} , {fucked[1]}] with {numbers[0]}");
+                    //Print();
+                    //Console.WriteLine($"WE ARE FUCKED AT [{fucked[0]} , {fucked[1]}] with {numbers[0]}");
                 }
             }
-            Console.WriteLine($"Number {number} was placed at[{location[0]} , {location[1]}]");
+            //Console.WriteLine($"Number {number} was placed at[{location[0]} , {location[1]}]");
         }
 
         public void Print()
@@ -708,6 +827,21 @@ namespace SodukoSolver
                     {0,0,1,8,0,0,6,0,0}
                 };
             }
+            else if (_difficulty == Difficulty.VeryHard)
+            {
+                _grid = new int[,]
+                {
+                    {0,0,0,0,1,0,0,0,6},
+                    {0,0,9,0,0,7,1,0,8},
+                    {8,0,4,0,0,0,0,0,0},
+                    {0,0,0,0,3,8,0,0,0},
+                    {6,0,0,0,0,0,0,5,0},
+                    {0,0,5,1,7,0,0,0,0},
+                    {1,0,0,0,8,0,0,2,0},
+                    {0,5,0,4,0,9,0,0,0},
+                    {0,2,0,0,0,0,3,9,0}
+                };
+            }
             else if (_difficulty == Difficulty.Expert)
             {
                 _grid = new int[,]
@@ -816,6 +950,28 @@ namespace SodukoSolver
                 else if (info) Console.WriteLine($"[{box[0]} , {box[1]}] CORRECT");
                 _grid[box[0], box[1]] = number;
             }
+        }
+
+        private int GetTotal()
+        {
+            int toReturn = 0;
+            foreach (int[] i in _allIndexes)
+            {
+                toReturn += GetNumberFromIndex(i);
+            }
+
+            return toReturn;
+        }
+
+        private void Check()
+        {
+            if (GetTotal() == 405) IsSolved = true;
+            else IsSolved = false;
+        }
+
+        private void TakeBackup()
+        {
+            _backup = (int[,])_grid.Clone();
         }
     }
 }

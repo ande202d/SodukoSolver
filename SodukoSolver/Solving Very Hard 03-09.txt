@@ -1,0 +1,17 @@
+﻿When we come to advanced guessing it these are the starts
+
+THE SOLUTION IS 7 AND THEN 7-9 OR SOMETHING
+
+column 1: number
+column 2: number of places it can go
+column 3: times the code will try to solve the sudoku for this number (number one would be: (21+24+19+13+12+28+7+9) x 7 = 931 )
+
+1		7		931
+2		21		2499
+3		24		2784
+4		19		1573
+5		13		1521
+6		12		1536
+7		28		3136
+8		7		931
+9		9		1179
