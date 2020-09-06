@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,8 +10,9 @@ namespace SodukoSolver
     public class WorkerV2
     {
 
-        private int[,] _grid;
-        private int[,] _backup;
+        private int[,] _grid; //to solve
+        private int[,] _backup; //back up when math have been applied
+        private int[,] _originalCopy; //copy of the original
 
 
         public enum Difficulty
@@ -34,6 +36,10 @@ namespace SodukoSolver
         private List<int[]> _sqare8Indexes = new List<int[]>();
         private List<int[]> _sqare9Indexes = new List<int[]>();
         private bool _isSolved;
+        private DateTime _timeStarted;
+        private DateTime _timeFinished;
+        private int _solvedByMathUses = 0;
+        private int _algorithmUses = 0;
 
 
         public bool IsSolved
@@ -45,7 +51,6 @@ namespace SodukoSolver
         {
             _difficulty = difficulty;
             SetDifficulty();
-            //_grid = _solution_hard;
             getAndsetAllIndexes();
         }
 
@@ -54,6 +59,8 @@ namespace SodukoSolver
             Print();
 
             CollectInformation();
+
+            _timeStarted = DateTime.Now;
 
             Solve();
         }
@@ -85,6 +92,14 @@ namespace SodukoSolver
             }
 
             Print();
+
+            if (Check())
+            {
+                _timeFinished = DateTime.Now;
+                PrintTime();
+            }
+
+            PrintSolvedMathUses();
 
             IsItCorrect();
         }
@@ -153,6 +168,8 @@ namespace SodukoSolver
                 }
                 if (GetFreeSpotsInList(_allIndexes).Count == 0) break;
             }
+
+            _solvedByMathUses++;
         }
         /// <summary>
         /// Takes a list of locations and tries to place the number
@@ -161,7 +178,7 @@ namespace SodukoSolver
         private bool PlaceNumberInArea(List<int[]> area, int number, List<int[]> cantGoHere = null)
         {
             bool toReturn = false;
-
+            _algorithmUses++;
             //int NumberOfSuitableSpots = 0;
             if (!GetNumbersInArea(area).Contains(number))
             {
@@ -327,7 +344,7 @@ namespace SodukoSolver
                     Console.WriteLine($"TRYING TO PLACE {number} ON: [{spot[0]} , {spot[1]}] - [ADVANCED]");
                     SetData(spot, number);
                     List<int> numbers = new List<int>{1,2,3,4,5,6,7,8,9};
-                    numbers.Remove(number);
+                    //numbers.Remove(number);
                     for (int j = 0; j < numbers.Count; j++)
                     {
                         if (!IsSolved) GuessOnNumber(numbers[j]);
@@ -670,13 +687,21 @@ namespace SodukoSolver
             int j = 0;
             int l = 0;
             int k = 0;
-            foreach (int i in _grid)
+            foreach (int[] index in _allIndexes)
             {
+                int number = GetNumberFromIndex(index);
                 if (j % 9 == 0 && j != 0) { Console.WriteLine(); k++; }
                 if (l % 3 == 0 && l % 9 != 0) Console.Write("| ");
                 if (k == 3) { Console.WriteLine("---------------------"); k = 0; }
-                if (i == 0) Console.Write(" " + " ");
-                else Console.Write(i + " ");
+
+                if (number == 0) Console.Write(" " + " ");
+                else if (number == _originalCopy[index[0], index[1]])
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(number + " ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else Console.Write(number + " ");
                 j++;
                 l++;
             }
@@ -769,6 +794,7 @@ namespace SodukoSolver
                     {0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else if (_difficulty == Difficulty.Easy)
             {
@@ -784,6 +810,7 @@ namespace SodukoSolver
                     {5,1,3,4,8,0,0,0,7},
                     {6,9,0,7,5,2,0,0,3}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else if (_difficulty == Difficulty.Medium)
             {
@@ -799,6 +826,7 @@ namespace SodukoSolver
                     {7,0,0,9,0,2,1,0,0},
                     {6,0,2,0,0,0,5,0,3}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else if (_difficulty == Difficulty.Hard)
             {
@@ -826,6 +854,7 @@ namespace SodukoSolver
                     {9,3,0,0,5,0,0,0,0},
                     {0,0,1,8,0,0,6,0,0}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else if (_difficulty == Difficulty.VeryHard)
             {
@@ -841,6 +870,7 @@ namespace SodukoSolver
                     {0,5,0,4,0,9,0,0,0},
                     {0,2,0,0,0,0,3,9,0}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else if (_difficulty == Difficulty.Expert)
             {
@@ -856,6 +886,7 @@ namespace SodukoSolver
                     {0,0,0,0,1,0,6,0,0},
                     {7,0,0,3,0,0,0,0,0}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
             else
             {
@@ -871,6 +902,7 @@ namespace SodukoSolver
                     {0,0,0,0,0,0,0,0,0},
                     {0,0,0,0,0,0,0,0,0}
                 };
+                _originalCopy = (int[,])_grid.Clone();
             }
         }
 
@@ -963,15 +995,28 @@ namespace SodukoSolver
             return toReturn;
         }
 
-        private void Check()
+        private bool Check()
         {
             if (GetTotal() == 405) IsSolved = true;
             else IsSolved = false;
+            return IsSolved;
         }
 
         private void TakeBackup()
         {
             _backup = (int[,])_grid.Clone();
+        }
+
+        public void PrintTime()
+        {
+            TimeSpan ts = _timeFinished - _timeStarted;
+            Console.WriteLine($"FINISHED IN: [{ts}]");
+        }
+
+        private void PrintSolvedMathUses()
+        {
+            Console.WriteLine($"IT USED SOLVE BY MATH [ {_solvedByMathUses} ] TIMES");
+            Console.WriteLine($"IT USED ALGORITHMS [ {_algorithmUses} ] TIMES");
         }
     }
 }
