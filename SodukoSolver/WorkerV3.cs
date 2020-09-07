@@ -921,9 +921,104 @@ namespace SodukoSolver
                     }
                     else if (numbersToWorkWith.Count == 2)
                     {
-                        continue;
+                        //continue;
                         //We are guessing on the last number to work with, and if we find a naked triple, we break
                         nakedTriples = new List<int[]>() { box };
+                        int numberAdded = 0;
+
+                        foreach (int[] box2 in locations)
+                        {
+                            if (box2.SequenceEqual(box)) continue; //we don't want to check the one that got us here
+
+                            List<int> candidates = GetCandidatesForIndex(box2);
+
+                            if (candidates.Count > 3) continue; //so this also got 2 or 3 potential numbers
+                            if (candidates.Count == 2)
+                            {
+                                bool toAdd = true;
+                                foreach (int number in candidates)
+                                {
+                                    if (!numbersToWorkWith.Contains(number)) toAdd = false;
+                                }
+                                if (toAdd) nakedTriples.Add(box2);
+                            }
+                            else if (candidates.Count == 3)
+                            {
+                                //HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE HERE
+                                //we are in the next box, and we want to make sure that 2 of the 3 candidates matches the 2 numbers to work with
+                                int numbersMatches = 0;
+                                foreach (int number in candidates)
+                                {
+                                    if (numbersToWorkWith.Contains(number)) numbersMatches++;
+                                }
+
+                                if (numbersMatches == 2)
+                                {
+                                    List<int> candidatesInThisBox = GetCandidatesForIndex(box2);
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        if (!numbersToWorkWith.Contains(candidatesInThisBox[i]))
+                                        {
+                                            numbersToWorkWith.Add(candidatesInThisBox[i]);
+                                            numberAdded = candidatesInThisBox[i];
+                                            break;
+                                        }
+                                    }
+                                    //now we will run though all the other boxes and check if they match, and if not, remove the number we added
+                                    //and take the next box from previous and continue
+                                    if (numbersToWorkWith.Count == 3)
+                                    {
+                                        foreach (int[] box4 in locations)
+                                        {
+                                            if (box4.SequenceEqual(box)) continue; //we don't want to check the one that got us here
+                                            if (box4.SequenceEqual(box2)) continue; //we don't want to check the one that got us here
+
+                                            List<int> candidates2 = GetCandidatesForIndex(box4);
+
+                                            if (candidates2.Count > 3) continue; //so this also got 2 or 3 potential numbers
+
+                                            bool toAdd = true;
+                                            foreach (int number in candidates2)
+                                            {
+                                                if (!numbersToWorkWith.Contains(number)) toAdd = false;
+                                            }
+                                            if (toAdd) nakedTriples.Add(box4);
+                                        }
+                                        if (nakedTriples.Count == 3)
+                                        {
+                                            //Console.WriteLine("--------------------------------------------------------------");
+                                            //Console.WriteLine($"NUMBERS: {numbersToWorkWith[0]} , {numbersToWorkWith[1]} , {numbersToWorkWith[2]}");
+                                            //Console.WriteLine($"IN: [{nakedTriples[0][0]} , {nakedTriples[0][1]}] , [{nakedTriples[1][0]} , {nakedTriples[1][1]}] , [{nakedTriples[2][0]} , {nakedTriples[2][1]}]");
+                                            foreach (int[] box3 in locations)
+                                            {
+                                                if (nakedTriples.Exists(x => x.SequenceEqual(box3))) continue;
+                                                foreach (int i in numbersToWorkWith)
+                                                {
+                                                    if (GetCandidatesForIndex(box3).Contains(i))
+                                                    {
+                                                        //if the box3 is not included in the naked triple, but it contains some of the numbers, we want to remove these numbers from potential candidates
+                                                        _listOfAllCandidates[i - 1].Remove(box3);
+                                                        Console.WriteLine($"\t\t\t\t\tREMOVED CANDIDATE FOR {i} AT [{box3[0]} , {box3[1]}]");
+                                                    }
+                                                }
+                                            }
+                                            foreach (int[] hej in locations)
+                                            {
+                                                //PrintCandidatesForIndex(hej);
+                                            }
+                                            //Console.WriteLine("--------------------------------------------------------------");
+                                            nakedTriples = new List<int[]>() { box };
+                                            numberAdded = 0;
+                                        }
+                                    }
+                                }
+
+                            }
+                            
+                        }
+
+                        continue;
+                        #region OLD
                         for (int guessedNumber = 1; guessedNumber < 9; guessedNumber++)
                         {
                             numbersToWorkWith.Add(guessedNumber);
@@ -977,7 +1072,8 @@ namespace SodukoSolver
                                 break;
                             }
                             nakedTriples = new List<int[]>() { box };
-                        }
+                        } 
+                        #endregion
                     }
 
                 }
