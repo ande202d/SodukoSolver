@@ -561,6 +561,15 @@ namespace SodukoSolver
                 RemoveCandidates();
                 SolveSingleCandidates();
                 SolveHiddenSingleCandidates();
+                if (i == 5)
+                {
+                    //Print();
+                    //FindNakedTriple(GetColumn(3));
+                    //Console.WriteLine("------------------------------");
+                    //Console.WriteLine("------------------------------");
+                    //RemoveCandidatesNakedTriple2();
+                    //Console.WriteLine("hej");
+                }
                 if (Check()) break;
             }
             Print();
@@ -859,6 +868,124 @@ namespace SodukoSolver
             }
         }
 
+        #region nakedtriple fucked
+
+        private List<int> GetNakedTripleNumbers(List<int[]> nakedTriple)
+        {
+            List<int> toReturn = new List<int>();
+
+            foreach (int[] box in nakedTriple)
+            {
+                foreach (int i in GetCandidatesForIndex(box))
+                {
+                    if (!toReturn.Contains(i)) toReturn.Add(i);
+                }
+            }
+
+            return toReturn;
+        }
+
+        private List<int[]> FindNakedTriple(List<int[]> area)
+        {
+            foreach (int[] box in area)
+            {
+                PrintCandidatesForIndex(box);
+            } //printing
+
+            List<int[]> toReturn = new List<int[]>();
+
+            List<int[]> boxesToWorkWith = new List<int[]>();
+            foreach (int[] box in GetFreeSpotsInList(area))
+            {
+                if (GetCandidatesForIndex(box).Count == 1) Console.WriteLine("HAHAHAHAHAHHAHHAHAHAHAHHAHAHAHAHHAHAHAHHAHAHAHAHA");
+                if (GetCandidatesForIndex(box).Count <= 3) boxesToWorkWith.Add(box);
+            }
+
+            Console.WriteLine("--------------------------------------------");
+            foreach (int[] box in boxesToWorkWith)
+            {
+                PrintCandidatesForIndex(box);
+            } //printing
+
+            foreach (int[] box in boxesToWorkWith)
+            {
+                List<int[]> nakedTriple = new List<int[]>(){box};
+                List<int> nakedTripleNumbers = GetCandidatesForIndex(box);
+                foreach (int[] box2 in boxesToWorkWith)
+                {
+                    if (box2 == box) continue;
+                    if (nakedTripleNumbers.Count == 3)
+                    {
+                        bool toAdd = true;
+                        List<int> box2Candidates = GetCandidatesForIndex(box2);
+                        foreach (int number in box2Candidates)
+                        {
+                            if (!nakedTripleNumbers.Contains(number)) toAdd = false;
+                        }
+                        if (toAdd) nakedTriple.Add(box2);
+                    }
+                    else if (nakedTripleNumbers.Count == 2)
+                    {
+                        for (int i = 1; i <= 9; i++)
+                        {
+                            if (nakedTripleNumbers.Contains(i)) continue;
+                            else nakedTripleNumbers.Add(i);
+                            bool toAdd = true;
+                            List<int> box2Candidates = GetCandidatesForIndex(box2);
+                            foreach (int number in box2Candidates)
+                            {
+                                if (!nakedTripleNumbers.Contains(number)) toAdd = false;
+                            }
+                            if (toAdd) nakedTriple.Add(box2);
+                            nakedTripleNumbers.Remove(i);
+                        }
+                    }
+
+                    if (nakedTriple.Count == 3)
+                    {
+                        return nakedTriple;
+                    }
+                }
+            }
+
+
+            return toReturn;
+        }
+        private void RemoveCandidatesNakedTriple2()
+                {
+                    for (int squareRowColumnNumber = 0; squareRowColumnNumber < 9; squareRowColumnNumber++)
+                    {
+                        //List<int[]> nakedTriple = FindNakedTriple(_allSquaresInOneList[squareRowColumnNumber]);
+                        //List<int[]> nakedTriple = FindNakedTriple(GetRow(squareRowColumnNumber));
+                        List<int[]> nakedTriple = FindNakedTriple(GetColumn(squareRowColumnNumber));
+                        if (nakedTriple.Count != 0)
+                        {
+                            List<int> numbersToRemove = GetNakedTripleNumbers(nakedTriple);
+                            foreach (int i in numbersToRemove)
+                            {
+                                int intToRemove = i - 1;
+                                List<int[]> toRemove = new List<int[]>();
+                                PrintCandidates(5);
+                                foreach (int[] box in _listOfAllCandidates[intToRemove])
+                                {
+                                    if (_allSquaresInOneList[squareRowColumnNumber].Exists(x => x.SequenceEqual(box))) toRemove.Add(box);
+                                }
+
+                                foreach (int[] box in toRemove)
+                                {
+                                    if (_listOfAllCandidates[intToRemove].Exists(x => x.SequenceEqual(box)))
+                                    {
+                                        _listOfAllCandidates[intToRemove].Remove(box);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+        #endregion
+
+
         private void RemoveCandidatesNakedTriple() //advanced shit NOT DONE
         {
             for (int squareRowColumnNumber = 0; squareRowColumnNumber < 9; squareRowColumnNumber++)
@@ -1079,6 +1206,8 @@ namespace SodukoSolver
                 }
             }
         }
+
+        
 
         private void RemoveCandidatesHiddenPair() //advanced shit NOT DONE
         {
