@@ -496,34 +496,7 @@ namespace SodukoSolver
             Console.WriteLine($"FINISHED IN: [{ts}]");
         }
 
-        public void Print()
-        {
-            Console.WriteLine(" ");
-            int j = 0;
-            int l = 0;
-            int k = 0;
-            foreach (int[] index in _allIndexes)
-            {
-                int number = GetNumberFromIndex(index);
-                if (j % 9 == 0 && j != 0) { Console.WriteLine(); k++; }
-                if (l % 3 == 0 && l % 9 != 0) Console.Write("| ");
-                if (k == 3) { Console.WriteLine("---------------------"); k = 0; }
-
-                if (number == 0) Console.Write(" " + " ");
-                else if (number == _originalCopy[index[0], index[1]])
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write(number + " ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else Console.Write(number + " ");
-                j++;
-                l++;
-            }
-
-            Console.WriteLine(" ");
-            Console.WriteLine(" ");
-        }
+        
 
 
 
@@ -556,6 +529,8 @@ namespace SodukoSolver
         public void Solve()
         {
             ReloadAllCandidates();
+            Print(true);
+            Console.WriteLine("hej");
             for (int i = 0; i < 10; i++)
             {
                 RemoveCandidates();
@@ -1502,6 +1477,103 @@ namespace SodukoSolver
                 total += _listOfAllCandidates[number - 1].Count;
             }
             Console.WriteLine($"TOTAL CANDIDATES: [{total}]");
+        }
+
+        public void Print(bool alsoCandidates = false)
+        {
+            if (!alsoCandidates)
+            {
+                Console.WriteLine(" ");
+                int j = 0;
+                int l = 0;
+                int k = 0;
+                foreach (int[] index in _allIndexes)
+                {
+                    int number = GetNumberFromIndex(index);
+                    if (j % 9 == 0 && j != 0) { Console.WriteLine(); k++; }
+                    if (l % 3 == 0 && l % 9 != 0) Console.Write("| ");
+                    if (k == 3) { Console.WriteLine("---------------------"); k = 0; }
+
+                    if (number == 0) Console.Write(" " + " ");
+                    else if (number == _originalCopy[index[0], index[1]])
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(number + " ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else Console.Write(number + " ");
+                    j++;
+                    l++;
+                }
+            }
+            else if (alsoCandidates)
+            {
+                string s = " ";
+                string b = "X";
+                string b2 = "X";
+
+                ConsoleColor bcReset = ConsoleColor.Black;
+                ConsoleColor bcDone = ConsoleColor.Green;
+                ConsoleColor bcBorder = ConsoleColor.Red;
+
+                ConsoleColor fcReset = ConsoleColor.White;
+                ConsoleColor fcCan = ConsoleColor.Yellow;
+
+
+
+                for (int i = 0; i < 9; i++) //all rows
+                {
+                    List<int[]> row = GetRow(i);
+                    string toPrint1 = "";
+                    string toPrint2 = "";
+                    string toPrint3 = "";
+                    string toPrint4 = "";
+
+                    for (int j = 0; j < 9; j++) //all boxes
+                    {
+                        if (j == 3 || j == 6) //border between squares
+                        {
+                            toPrint1 += b;
+                            toPrint2 += b;
+                            toPrint3 += b;
+                        }
+                        int[] box = row[j];
+                        if (GetNumberFromIndex(box) != 0)
+                        {
+                            toPrint1 += (s + s + s + s + s);
+                            toPrint2 += (s + s + GetNumberFromIndex(box) + s + s);
+                            toPrint3 += (s + s + s + s + s);
+                        }
+                        else
+                        {
+                            List<int> can = GetCandidatesForIndex(box);
+                            toPrint1 += (can.Contains(1) ? "1" : s) + s + (can.Contains(2) ? "2" : s) + s + (can.Contains(3) ? "3" : s);
+                            toPrint2 += (can.Contains(4) ? "4" : s) + s + (can.Contains(5) ? "5" : s) + s + (can.Contains(6) ? "6" : s);
+                            toPrint3 += (can.Contains(7) ? "7" : s) + s + (can.Contains(8) ? "8" : s) + s + (can.Contains(9) ? "9" : s);
+                        }
+                        if (j != 2 && j != 5 && j != 8) //border between each box
+                        {
+                            toPrint1 += b;
+                            toPrint2 += b;
+                            toPrint3 += b;
+                        }
+                    }
+
+                    foreach (char c in toPrint3)
+                    {
+                        toPrint4 += b2;
+                    }
+
+                    
+                    Console.WriteLine(toPrint1);
+                    Console.WriteLine(toPrint2);
+                    Console.WriteLine(toPrint3);
+                    Console.WriteLine(toPrint4);
+                }
+            }
+
+            Console.WriteLine(" ");
+            Console.WriteLine(" ");
         }
 
     }
